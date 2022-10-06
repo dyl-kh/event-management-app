@@ -13,14 +13,17 @@ class EventManager(Staff):
         while open:
             print('Please select an option from the menu below')
             print('1. View all events')
-            print('2. View event details')
+            print('2. View / Manage Event')
+            print('3. Update Event Progress')
             print('0. Log out')
 
             uIn = input('Please enter your selection: ')
             if uIn == '1':
                 self.ViewAllEvents()
-            if uIn == '2':
+            elif uIn == '2':
                 self.ViewEventDetails()
+            elif uIn == '3':
+                self.UpdateEventProgress()
             elif uIn == '0':
                 print('Logging out')
                 open = False
@@ -35,6 +38,10 @@ class EventManager(Staff):
             except EOFError:
                 events = []
                 print('No events found')
+
+        if len(events) == 0:
+            print('No events found')
+            return
 
         for e in events:
             print('')
@@ -67,10 +74,7 @@ class EventManager(Staff):
                     print('Date:', e['date'])
                     print('Guests:', e['numGuests'])
                     print('Menu:', e['menu'].name)
-                    optionalNames = []
-                    for o in e['optionalServices']:
-                        optionalNames.append(o.name)
-                    print('Optional Services:', optionalNames)
+                    print('Optional Services:', e['optionalServicesNames'])
                     print(f'Total Price: ${e["totalPrice"]}')
 
                     # manage event
@@ -81,21 +85,62 @@ class EventManager(Staff):
                     uIn = input('Please enter your selection: ')
                     if uIn == '1':
                         self.ManageEvent(e)
+                        return
                     elif uIn == '2':
                         self.DeleteEvent(e)
+                        return
                     elif uIn == '0':
                         active = False
                         break
 
-                else:
-                    print('Event not found')
+            else:
+                print('Event not found')
 
     # manage event
     def ManageEvent(self, event):
-        print('manage event')
+        print('TO DO manage event')
         pass
 
     # delete event
     def DeleteEvent(self, event):
-        print('delete event')
-        pass
+        print('Please confirm you wish to delete this event')
+        print('Enter 0 to return to the previous menu')
+        print('To confirm type DELETE')
+        uIn = input('Please enter your selection: ')
+        if uIn == '0':
+            return
+        elif uIn == 'DELETE':
+            with open('./storage/events.pkl', 'rb') as f:
+                try:
+                    events = pickle.load(f)
+                except EOFError:
+                    events = []
+
+            for e in events:
+                if e['id'] == event['id']:
+                    e['venue'].unbookDate(e['date'])
+                    events.remove(e)
+            with open('./storage/events.pkl', 'wb') as f:
+                pickle.dump(events, f)
+            print('Event deleted')
+        else:
+            print('Event not deleted')
+
+    # update event progress
+    def UpdateEventProgress(self):
+        active = True
+        while active:
+            print('Enter the ID of the event you wish to update')
+            print('Enter 0 to return to the previous menu')
+            uIn = input('ID: ')
+            if uIn == '0':
+                return
+            with open('./storage/events.pkl', 'rb') as f:
+                try:
+                    events = pickle.load(f)
+                except EOFError:
+                    events = []
+                    print('No events found')
+            for e in events:
+                if str(e['id']) == uIn:
+                    pass

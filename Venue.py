@@ -35,15 +35,28 @@ class Venue():
                 return v['unavailableDates']
                 break
 
-    # def bookDate(self):
-    #     with open('./storage/venues.json', 'r') as f:
-    #         venues = json.load(f)
+    def bookDate(self, date):
+        with open('./storage/venues.json', 'r') as f:
+            venues = json.load(f)
 
-    #     for v in venues:
-    #         if v['name'] == self.name:
-    #             v['unavailableDates'].append(self.date)
-    #             break
+        for v in venues:
+            if v['name'] == self.name:
+                v['unavailableDates'].append(str(date))
+                break
 
-    #     file = open('./storage/venues.json', 'w')
-    #     json.dump(venues, file)
-    #     file.close()
+        file = open('./storage/venues.json', 'w')
+        json.dump(venues, file, indent=4)
+        file.close()
+
+    def unbookDate(self, date):
+        with open('./storage/venues.json', 'r') as f:
+            venues = json.load(f)
+
+        for v in venues:
+            if v['name'] == self.name:
+                v['unavailableDates'].remove(str(date))
+                break
+
+        file = open('./storage/venues.json', 'w')
+        json.dump(venues, file, indent=4)
+        file.close()

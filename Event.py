@@ -22,6 +22,7 @@ class Event():
         self.menu = self.setMenu()
         self.optionalSelections = self.setOptionalServices()
         self.totalPrice = self.calculateTotalPrice()
+        self.optionalServicesNames = self.getOptionalServicesNames()
         self.completeBooking()
 
     # set package with input
@@ -198,16 +199,19 @@ class Event():
                         selectedNames.append('Flower Decorations')
                     valid = True
 
-                    print('Would you like to add another optional service?')
-                    print('1. Yes')
-                    print('2. No')
-                    uIn = input('Please enter your selection: ')
-                    if uIn == '1':
-                        valid = False
-                    elif uIn == '2':
+                    if len(optionalSelections) < 3:
+                        print('Would you like to add another optional service?')
+                        print('1. Yes')
+                        print('2. No')
+                        uIn = input('Please enter your selection: ')
+                        if uIn == '1':
+                            valid = False
+                        elif uIn == '2':
+                            valid = True
+                    else:
                         valid = True
-                        print('Optional services selected')
-                        print('Optional services: ', optionalSelections)
+                        print('All optional services selected')
+                        print('Optional services selected: ', optionalSelections)
                         return optionalSelections
                 else:
                     print('Invalid input')
@@ -260,6 +264,7 @@ class Event():
             "optionalServices": self.optionalSelections,
             "totalPrice": self.totalPrice,
             "paid": True,
+            "optionalServicesNames": self.optionalServicesNames,
         }
 
         events.append(event)
@@ -286,6 +291,7 @@ class Event():
                 finance.processPayment(self.totalPrice)
                 print('Booking complete')
                 self.saveEvent()
+                self.venue.bookDate(self.date)
                 valid = True
             elif uIn == '2':
                 print('Payment cancelled')
@@ -293,3 +299,13 @@ class Event():
                 valid = True
             else:
                 print('Invalid input')
+
+    # get optional services names
+    def getOptionalServicesNames(self):
+        if self.optionalSelections:
+            optionalNames = []
+            for o in self.optionalSelections:
+                optionalNames.append(o.name)
+            return optionalNames
+        else:
+            return 'None'
