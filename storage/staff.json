@@ -1,0 +1,17 @@
+[
+  {
+    "role": "Event Manager",
+    "username": "em",
+    "password": "p"
+  },
+  {
+    "role": "Caterer",
+    "username": "c",
+    "password": "p"
+  },
+  {
+    "role": "Logistics Manager",
+    "username": "lm",
+    "password": "p"
+  }
+]

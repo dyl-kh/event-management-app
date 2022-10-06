@@ -1,3 +1,4 @@
+import pickle
 import json
 from uuid import uuid4 as uuid
 from datetime import date as dateImport
@@ -238,31 +239,34 @@ class Event():
             print('Optional Services: None')
         print('Total Price: ', self.totalPrice)
 
+    # save booking details to storage
     def saveEvent(self):
-        with open('./storage/events.json', 'r') as f:
-            events = json.load(f)
 
-        if self.optionalSelections:
-            optionalNames = []
-            for o in self.optionalSelections:
-                optionalNames.append(o.name)
-        else:
-            optionalNames = "None"
+        with open('./storage/events.pkl', 'rb') as f:
+            try:
+                events = pickle.load(f)
+            except EOFError:
+                events = []
+
+        print(events)
+
         event = {
-            "id": str(self.id),
-            "package": self.package.name,
-            "venue": self.venue.name,
-            "numGuests": str(self.numGuests),
-            "date": str(self.date),
-            "menu": self.menu.name,
-            "optionalServices": optionalNames,
-            "totalPrice": str(self.totalPrice),
+            "id": self.id,
+            "package": self.package,
+            "venue": self.venue,
+            "numGuests": self.numGuests,
+            "date": self.date,
+            "menu": self.menu,
+            "optionalServices": self.optionalSelections,
+            "totalPrice": self.totalPrice,
             "paid": True,
         }
-        events.append(event)
-        with open('./storage/events.json', 'w') as f:
-            json.dump(events, f, indent=4)
 
+        events.append(event)
+        with open('./storage/events.pkl', 'wb') as f:
+            pickle.dump(events, f, pickle.HIGHEST_PROTOCOL)
+
+    # finalise booking
     def completeBooking(self):
         print('Event details complete')
         self.printBookingDetails()

@@ -1,5 +1,6 @@
 #import event.py
 from Event import Event
+from StaffAuth import StaffAuth
 
 open = True
 print('Welcome to Perfect Event Agency')
@@ -14,11 +15,13 @@ while open:
 
     if uIn == '1':
         print('Create an Event')
-        event = Event()
+        Event()
     elif uIn == '2':
         print('Track an Event')
     elif uIn == '3':
         print('Staff login')
+        StaffAuth()
+
     elif uIn == '4':
         print('Goodbye')
         open = False
