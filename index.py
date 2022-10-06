@@ -10,7 +10,7 @@ while open:
     print('1. Create an Event')
     print('2. Track an Event')
     print('3. Staff login')
-    print('4. Exit')
+    print('0. Exit')
     uIn = input('Please enter your selection: ')
 
     if uIn == '1':
@@ -22,7 +22,7 @@ while open:
         print('Staff login')
         StaffAuth()
 
-    elif uIn == '4':
+    elif uIn == '0':
         print('Goodbye')
         open = False
     else:
