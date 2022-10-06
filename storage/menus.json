@@ -1,0 +1,5 @@
+[
+  { "name": "Western", "pricePerHead": "12" },
+  { "name": "Mexican", "pricePerHead": "15" },
+  { "name": "Indian", "pricePerHead": "11" }
+]

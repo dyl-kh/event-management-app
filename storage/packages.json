@@ -1,0 +1,5 @@
+[
+  { "name": "Family", "price": "500", "maxGuests": "15" },
+  { "name": "Party", "price": "1000", "maxGuests": "50" },
+  { "name": "Grand", "price": "1500", "maxGuests": "150" }
+]
