@@ -2,12 +2,12 @@ import pickle
 import json
 from uuid import uuid4 as uuid
 from datetime import date as dateImport
-from Package import Package
-from Venue import Venue
-from Menu import Menu
-from Band import Band
-from SoundSystem import SoundSystem
-from FlowerDecorations import FlowerDecorations
+from mandatoryServices.Package import Package
+from mandatoryServices.Venue import Venue
+from mandatoryServices.Menu import Menu
+from optionalServices.Band import Band
+from optionalServices.SoundSystem import SoundSystem
+from optionalServices.FlowerDecorations import FlowerDecorations
 from Customer import Customer
 from Finance import Finance
 

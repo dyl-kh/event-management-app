@@ -1,5 +1,5 @@
 from typing import Optional
-from OptionalServices import OptionalServices
+from optionalServices.OptionalServices import OptionalServices
 
 
 class SoundSystem(OptionalServices):

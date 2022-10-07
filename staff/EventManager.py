@@ -1,9 +1,9 @@
-from Staff import Staff
+from staff.Staff import Staff
 import pickle
 import json
-from Band import Band
-from SoundSystem import SoundSystem
-from FlowerDecorations import FlowerDecorations
+from optionalServices.Band import Band
+from optionalServices.SoundSystem import SoundSystem
+from optionalServices.FlowerDecorations import FlowerDecorations
 
 
 class EventManager(Staff):

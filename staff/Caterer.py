@@ -1,14 +1,14 @@
-from Staff import Staff
+from staff.Staff import Staff
 import pickle
 
 
-class LogisticsManager(Staff):
+class Caterer(Staff):
     def __init__(self, role):
         super().__init__(role)
         self.Nav()
 
     def Nav(self):
-        print('Welcome Logistics Manager')
+        print('Welcome Caterer')
         open = True
         while open:
             print()
@@ -50,7 +50,8 @@ class LogisticsManager(Staff):
         for e in events:
             print('')
             print('ID:', e['id'])
-            print('Optional Services:', e['optionalServicesNames'])
+            print('Menu:', e['menu'].name)
+            print('Guests:', e['numGuests'])
             print('Date:', e['date'])
             print(f"Progress: {e['eventProgress']}%")
 
@@ -115,12 +116,12 @@ class LogisticsManager(Staff):
                         print(
                             'If none of the following tasks have been completed, please enter 0')
                         print()
-                        print('1. Optional Services organised')
+                        print('1. Caterering organised')
                         print('0. None')
                         uIn = input('Please enter your selection: ')
                         if uIn == '1':
                             updatedEvent = e['calculateProgress'](
-                                'optionalServicesOrganised', True)
+                                'menuOrganised', True)
                             valid = True
                         elif uIn == '0':
                             return

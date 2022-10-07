@@ -1,6 +1,6 @@
 #import event.py
 from Event import Event
-from StaffAuth import StaffAuth
+from staff.StaffAuth import StaffAuth
 
 open = True
 print('Welcome to Perfect Event Agency')

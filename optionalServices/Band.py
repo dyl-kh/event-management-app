@@ -1,4 +1,4 @@
-from OptionalServices import OptionalServices
+from optionalServices.OptionalServices import OptionalServices
 
 
 class Band(OptionalServices):

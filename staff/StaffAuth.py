@@ -1,7 +1,7 @@
 import json
-from EventManager import EventManager
-from Caterer import Caterer
-from LogisticsManager import LogisticsManager
+from staff.EventManager import EventManager
+from staff.Caterer import Caterer
+from staff.LogisticsManager import LogisticsManager
 
 
 class StaffAuth:
