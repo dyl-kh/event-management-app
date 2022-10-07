@@ -8,6 +8,7 @@ class EventManager(Staff):
         super().__init__(role)
         self.Nav()
 
+    # main menu for event manager
     def Nav(self):
         print('Welcome Event Manager')
         open = True
@@ -105,7 +106,7 @@ class EventManager(Staff):
             else:
                 print('Event not found')
 
-    # manage event
+    # edit event
     def EditEvent(self, event):
         active = True
         while active:

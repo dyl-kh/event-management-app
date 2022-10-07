@@ -1,5 +1,6 @@
 import json
 from EventManager import EventManager
+from Caterer import Caterer
 
 
 class StaffAuth:
@@ -40,3 +41,5 @@ class StaffAuth:
             if s['username'] == self.username and s['password'] == self.password:
                 if s['role'] == 'Event Manager':
                     EventManager('Event Manager')
+                elif s['role'] == 'Caterer':
+                    Caterer('Caterer')
