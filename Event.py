@@ -317,6 +317,8 @@ class Event():
             if uIn == '1':
                 finance.processPayment(self.totalPrice)
                 print('Booking complete')
+                print(f'Your Event ID is {self.id}')
+                print('Please keep this safe')
                 self.saveEvent()
                 self.venue.bookDate(self.date)
                 valid = True
