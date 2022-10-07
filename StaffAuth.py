@@ -1,6 +1,7 @@
 import json
 from EventManager import EventManager
 from Caterer import Caterer
+from LogisticsManager import LogisticsManager
 
 
 class StaffAuth:
@@ -43,3 +44,5 @@ class StaffAuth:
                     EventManager('Event Manager')
                 elif s['role'] == 'Caterer':
                     Caterer('Caterer')
+                elif s['role'] == 'Logistics Manager':
+                    LogisticsManager('Logistics Manager')

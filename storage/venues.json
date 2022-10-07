@@ -11,7 +11,8 @@
         "name": "Garden",
         "unavailableDates": [
             "2022-09-04",
-            "2022-05-02"
+            "2022-05-02",
+            "2022-05-05"
         ],
         "address": "1 Garden Street",
         "price": "100"

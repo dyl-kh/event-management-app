@@ -228,7 +228,8 @@ class EventManager(Staff):
 
                     newSelections = currentSelections
                     newNames = currentNames
-
+                    event['calculateProgress'](
+                        'optionalServicesOrganised', False)
                     print(
                         f'Optional services updated to {newNames}')
                     event = event['calculateProgress'](
