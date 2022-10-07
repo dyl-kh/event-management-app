@@ -22,6 +22,7 @@ class Event():
         self.menu = self.setMenu()
         self.optionalSelections = self.setOptionalServices()
         self.optionalServicesNames = self.setOptionalServicesNames()
+
         self.totalPrice = self.calculateTotalPrice()
 
         self.eventProgress = 0
@@ -232,17 +233,41 @@ class Event():
             total = int(event['package'].price)
             total += int(event['venue'].price)
             total += int(event['menu'].pricePerHead) * int(event['numGuests'])
+            venueBudget = int(event['venue'].price)
+            menuBudget = int(event['menu'].pricePerHead) * \
+                int(event['numGuests']) * 0.8
+            logsiticsTotal = 0
+            logisticsBudget = 0
             if self.optionalSelections:
                 for o in event['optionalSelections']:
                     total += int(o.price)
+                    logsiticsTotal += int(o.price)
+                logisticsBudget = logsiticsTotal * 0.8
+
+            event['venueBudget'] = venueBudget
+            event['menuBudget'] = menuBudget
+            event['logisticsBudget'] = logisticsBudget
+            self.profit = total - venueBudget - menuBudget - logisticsBudget
             return total
         else:
             total = int(self.package.price)
             total += int(self.venue.price)
             total += int(self.menu.pricePerHead) * int(self.numGuests)
+            venueBudget = int(self.venue.price)
+            menuBudget = int(self.menu.pricePerHead) * \
+                int(self.numGuests) * 0.8
+            logsiticsTotal = 0
+            logisticsBudget = 0
             if self.optionalSelections:
                 for o in self.optionalSelections:
                     total += int(o.price)
+                    logsiticsTotal += int(o.price)
+                logisticsBudget = logsiticsTotal * 0.8
+            self.venueBudget = venueBudget
+            self.menuBudget = menuBudget
+            self.logisticsBudget = logisticsBudget
+            print(logisticsBudget)
+            self.profit = total - venueBudget - menuBudget - logisticsBudget
             return total
 
     # print booking details
@@ -280,7 +305,11 @@ class Event():
             "setOptionalServices": self.setOptionalServices,
             "calculateTotalPrice": self.calculateTotalPrice,
             "printBookingDetails": self.printBookingDetails,
-            "getDict": self.getDict
+            "getDict": self.getDict,
+            "venueBudget": self.venueBudget,
+            "menuBudget": self.menuBudget,
+            "logisticsBudget": self.logisticsBudget,
+            "profit": self.profit,
         }
 
     # save booking details to storage

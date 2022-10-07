@@ -13,5 +13,10 @@
     "role": "Logistics Manager",
     "username": "lm",
     "password": "p"
+  },
+  {
+    "role": "Finance Manager",
+    "username": "fm",
+    "password": "p"
   }
 ]

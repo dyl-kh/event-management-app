@@ -2,6 +2,7 @@ import json
 from staff.EventManager import EventManager
 from staff.Caterer import Caterer
 from staff.LogisticsManager import LogisticsManager
+from staff.FinanceManager import FinanceManager
 
 
 class StaffAuth:
@@ -46,3 +47,5 @@ class StaffAuth:
                     Caterer('Caterer')
                 elif s['role'] == 'Logistics Manager':
                     LogisticsManager('Logistics Manager')
+                elif s['role'] == 'Finance Manager':
+                    FinanceManager('Finance Manager')
