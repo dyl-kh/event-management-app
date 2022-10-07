@@ -91,7 +91,7 @@ class Event():
             print('Please enter the number of guests')
             uIn = input('Please enter your selection: ')
             if uIn.isdigit():
-                if int(uIn) < int(self.package.maxGuests):
+                if int(uIn) <= int(self.package.maxGuests):
                     valid = True
                     return int(uIn)
                 else:
@@ -107,7 +107,7 @@ class Event():
         while not valid:
             print('Please enter an available date')
             print('Format is yyyy-mm-dd')
-            print('Unavailable dates: ', self.venue.unavailableDates)
+            print('Unavailable dates: ', self.venue.getUnavailableDates())
             uIn = input('Please enter your selection: ')
             if uIn == '1':
                 print('Test selected')
@@ -227,14 +227,23 @@ class Event():
             return optionalSelections
 
     # calculate total price
-    def calculateTotalPrice(self):
-        total = int(self.package.price)
-        total += int(self.venue.price)
-        total += int(self.menu.pricePerHead) * int(self.numGuests)
-        if self.optionalSelections:
-            for o in self.optionalSelections:
-                total += int(o.price)
-        return total
+    def calculateTotalPrice(self, event=None):
+        if event:
+            total = int(event['package'].price)
+            total += int(event['venue'].price)
+            total += int(event['menu'].pricePerHead) * int(event['numGuests'])
+            if self.optionalSelections:
+                for o in event['optionalServices']:
+                    total += int(o.price)
+            return total
+        else:
+            total = int(self.package.price)
+            total += int(self.venue.price)
+            total += int(self.menu.pricePerHead) * int(self.numGuests)
+            if self.optionalSelections:
+                for o in self.optionalSelections:
+                    total += int(o.price)
+            return total
 
     # print booking details
     def printBookingDetails(self):
@@ -247,6 +256,7 @@ class Event():
         print('Optional Services: ', self.optionalServicesNames)
         print('Total Price: ', self.totalPrice)
 
+    # gets dict of event
     def getDict(self):
         return {
             "id": self.id,
@@ -262,6 +272,15 @@ class Event():
             "calculateProgress": self.calculateProgress,
             "eventProgress": self.eventProgress,
             "venueBooked": self.venueBooked,
+            "setPackage": self.setPackage,
+            "setVenue": self.setVenue,
+            "setNumGuests": self.setNumGuests,
+            "setDate": self.setDate,
+            "setMenu": self.setMenu,
+            "setOptionalServices": self.setOptionalServices,
+            "calculateTotalPrice": self.calculateTotalPrice,
+            "printBookingDetails": self.printBookingDetails,
+            "getDict": self.getDict
         }
 
     # save booking details to storage
@@ -322,8 +341,7 @@ class Event():
     def calculateProgress(self, toUpdate, value):
         currProgress = 0
         total = 3
-        print('venue', self.venueBooked)
-        print('seating', self.seatingOrganised)
+
         if toUpdate == 'venueBooked':
             self.venueBooked = value
         if toUpdate == 'seatingOrganised':
@@ -344,6 +362,5 @@ class Event():
         if self.optionalSelections:
             total += 1
 
-        print('curr', currProgress)
         self.eventProgress = (currProgress / total) * 100
         return self.getDict()

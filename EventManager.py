@@ -1,5 +1,6 @@
 from Staff import Staff
 import pickle
+import json
 
 
 class EventManager(Staff):
@@ -52,7 +53,6 @@ class EventManager(Staff):
             print(f"Progress: {e['eventProgress']}%")
 
     # view and manage single events
-
     def ViewEventDetails(self):
         active = True
         while active:
@@ -64,6 +64,7 @@ class EventManager(Staff):
                 break
 
             with open('./storage/events.pkl', 'rb') as f:
+                print('running')
                 try:
                     events = pickle.load(f)
                 except EOFError:
@@ -81,6 +82,7 @@ class EventManager(Staff):
                         print('Menu:', e['menu'].name)
                         print('Optional Services:', e['optionalServicesNames'])
                         print(f'Total Price: ${e["totalPrice"]}')
+                        print(f"Progress: {e['eventProgress']}%")
                         print()
 
                         # manage event
@@ -91,6 +93,7 @@ class EventManager(Staff):
                         uIn = input('Please enter your selection: ')
                         if uIn == '1':
                             self.EditEvent(e)
+                            activeTwo = False
                         elif uIn == '2':
                             if self.DeleteEvent(e):
                                 activeTwo = False
@@ -104,8 +107,161 @@ class EventManager(Staff):
 
     # manage event
     def EditEvent(self, event):
-        print('TO DO edit event')
-        pass
+        active = True
+        while active:
+            print()
+            print('Please select an option from the menu below')
+            print('1. Edit Package')
+            print('2. Edit Venue')
+            print('3. Edit Date')
+            print('4. Edit Guests')
+            print('5. Edit Menu')
+            print('6. Edit Optional Services')
+            print('0. Go Back')
+            print()
+
+            uIn = input('Please enter your selection: ')
+
+            priceUpdate = False
+            # edit package
+            if uIn == '1':
+                old = event['package']
+                event['package'] = event['setPackage']()
+                # check guests does not exceed package max
+                if event['numGuests'] > int(event['package'].maxGuests):
+                    event['numGuests'] = int(event['package'].maxGuests)
+                    print('Guests have been reduced due to change in package')
+                priceUpdate = True
+                print(
+                    f'Package changed from {old.name} to {event["package"].name}')
+            # edit venue
+            elif uIn == '2':
+                old = event['venue']
+                newVenue = event['setVenue']()
+                event['venue'] = newVenue
+                if old.name == newVenue.name:
+                    print('Venue unchanged')
+                    return
+                # check date is available
+                if str(event['date']) in event['venue'].getUnavailableDates():
+                    print('Venue is unavailable on this date')
+                    event['venue'] = old
+                    print('Venue not changed')
+                    return
+                else:
+                    # free up old venue
+                    old.unbookDate(event['date'])
+                    # book new venue
+                    event['venue'].bookDate(event['date'])
+                    # undo progress
+                    event = event['calculateProgress']('venueBooked', False)
+                    event = event['calculateProgress'](
+                        'seatingOrganised', False)
+                    event['venue'] = newVenue
+                    priceUpdate = True
+                    print(
+                        f'Venue changed from {old.name} to {event["venue"].name}')
+            # edit date
+            elif uIn == '3':
+                old = event['date']
+                newDate = event['setDate']()
+                event['venue'].bookDate(newDate)
+                event['venue'].unbookDate(old)
+
+                event = event['calculateProgress']('venueBooked', False)
+                event['date'] = newDate
+                print(f'Date changed from {old} to {newDate}')
+            # edit guests
+            elif uIn == '4':
+                old = event['numGuests']
+                newGuests = event['setNumGuests']()
+                event = event['calculateProgress']('seatingOrganised', False)
+                event['numGuests'] = newGuests
+                print(f'Guests changed from {old} to {event["numGuests"]}')
+            # edit menu
+            elif uIn == '5':
+                old = event['menu']
+                newMenu = event['setMenu']()
+                event = event['calculateProgress']('menuOrganised', False)
+                event['menu'] = newMenu
+                print(f'Menu changed from {old.name} to {event["menu"].name}')
+            # edit optional services
+            elif uIn == '6':
+                with open('./storage/optionalServices.json', 'r') as f:
+                    allSelections = json.load(f)
+                if 'optionalSelections' in event:
+                    currentSelections = event['optionalSelections']
+                    currentNames = event['optionalServicesNames']
+                else:
+                    currentSelections = []
+                    currentNames = []
+                print()
+                print('Toggle optional services')
+                done = False
+                while not done:
+                    print('Please select an option from the menu below')
+                    for i, s in enumerate(allSelections):
+                        if s['name'] in currentNames:
+                            print(f'{i+1}. {s["name"]} Remove')
+                        else:
+                            print(f'{i+1}. {s["name"]} Add')
+                    print('0. Done')
+                    print()
+                    uIn = input('Please enter your selection: ')
+                    if uIn == '0':
+                        done = True
+                        break
+                    elif int(uIn) in range(1, len(allSelections)+1):
+                        if allSelections[int(uIn)-1]['name'] in currentNames:
+                            currentSelections.remove(
+                                allSelections[int(uIn)-1])
+                            currentNames.remove(
+                                allSelections[int(uIn)-1]['name'])
+                        else:
+                            currentSelections.append(
+                                allSelections[int(uIn)-1])
+                            currentNames.append(
+                                allSelections[int(uIn)-1]['name'])
+                    else:
+                        print('Invalid input')
+
+                    newSelections = currentSelections
+                    newNames = currentNames
+
+                    print(
+                        f'Optional services updated to {newNames}')
+                    event = event['calculateProgress'](
+                        'optionalServicesOrganised', False)
+                    event['optionalSelections'] = newSelections
+                    event['optionalServicesNames'] = newNames
+                    priceUpdate = True
+            # go back
+            elif uIn == '0':
+                active = False
+                return
+            else:
+                print('Invalid input')
+
+            # update total price
+            if priceUpdate:
+                event['totalPrice'] = event['calculateTotalPrice'](event)
+                print(f'Total Price updated: ${event["totalPrice"]}')
+
+            # replace event in storage
+            with open('./storage/events.pkl', 'rb') as f:
+                try:
+                    events = pickle.load(f)
+                except EOFError:
+                    events = []
+
+            for i in range(len(events)):
+                if events[i]['id'] == event['id']:
+                    events[i] = event
+                    break
+
+            with open('./storage/events.pkl', 'wb') as f:
+                pickle.dump(events, f)
+                print('Event detail updated')
 
     # delete event
     def DeleteEvent(self, event):
@@ -174,6 +330,7 @@ class EventManager(Staff):
                         elif uIn == '2':
                             updatedEvent = e['calculateProgress'](
                                 'seatingOrganised', True)
+
                             valid = True
                         elif uIn == '0':
                             return

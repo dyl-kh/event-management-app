@@ -15,7 +15,6 @@ class Venue():
         for v in venues:
             if v['name'] == self.name:
                 return v['address']
-                break
 
     def getPrice(self):
         with open('./storage/venues.json', 'r') as f:
@@ -24,7 +23,6 @@ class Venue():
         for v in venues:
             if v['name'] == self.name:
                 return v['price']
-                break
 
     def getUnavailableDates(self):
         with open('./storage/venues.json', 'r') as f:
@@ -33,7 +31,6 @@ class Venue():
         for v in venues:
             if v['name'] == self.name:
                 return v['unavailableDates']
-                break
 
     def bookDate(self, date):
         with open('./storage/venues.json', 'r') as f:
