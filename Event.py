@@ -21,8 +21,15 @@ class Event():
         self.date = self.setDate()
         self.menu = self.setMenu()
         self.optionalSelections = self.setOptionalServices()
+        self.optionalServicesNames = self.setOptionalServicesNames()
         self.totalPrice = self.calculateTotalPrice()
-        self.optionalServicesNames = self.getOptionalServicesNames()
+
+        self.eventProgress = 0
+        self.venueBooked = False
+        self.seatingOrganised = False
+        self.menuOrganised = False
+        self.optionalServicesOrganised = False
+
         self.completeBooking()
 
     # set package with input
@@ -207,14 +214,17 @@ class Event():
                         if uIn == '1':
                             valid = False
                         elif uIn == '2':
+                            print('Optional services selected: ',
+                                  selectedNames)
                             valid = True
                     else:
-                        valid = True
                         print('All optional services selected')
-                        print('Optional services selected: ', optionalSelections)
-                        return optionalSelections
+                        valid = True
+
                 else:
                     print('Invalid input')
+
+            return optionalSelections
 
     # calculate total price
     def calculateTotalPrice(self):
@@ -234,27 +244,11 @@ class Event():
         print('Number of guests: ', self.numGuests)
         print('Date: ', self.date)
         print('Menu: ', self.menu.name)
-        if self.optionalSelections:
-            optionalNames = []
-            for o in self.optionalSelections:
-                optionalNames.append(o.name)
-            print('Optional Services: ', optionalNames)
-        else:
-            print('Optional Services: None')
+        print('Optional Services: ', self.optionalServicesNames)
         print('Total Price: ', self.totalPrice)
 
-    # save booking details to storage
-    def saveEvent(self):
-
-        with open('./storage/events.pkl', 'rb') as f:
-            try:
-                events = pickle.load(f)
-            except EOFError:
-                events = []
-
-        print(events)
-
-        event = {
+    def getDict(self):
+        return {
             "id": self.id,
             "package": self.package,
             "venue": self.venue,
@@ -265,7 +259,21 @@ class Event():
             "totalPrice": self.totalPrice,
             "paid": True,
             "optionalServicesNames": self.optionalServicesNames,
+            "calculateProgress": self.calculateProgress,
+            "eventProgress": self.eventProgress,
+            "venueBooked": self.venueBooked,
         }
+
+    # save booking details to storage
+    def saveEvent(self):
+
+        with open('./storage/events.pkl', 'rb') as f:
+            try:
+                events = pickle.load(f)
+            except EOFError:
+                events = []
+
+        event = self.getDict()
 
         events.append(event)
         with open('./storage/events.pkl', 'wb') as f:
@@ -300,12 +308,42 @@ class Event():
             else:
                 print('Invalid input')
 
-    # get optional services names
-    def getOptionalServicesNames(self):
+    # set optional services names
+    def setOptionalServicesNames(self):
         if self.optionalSelections:
             optionalNames = []
             for o in self.optionalSelections:
                 optionalNames.append(o.name)
             return optionalNames
         else:
-            return 'None'
+            return None
+
+    # calculate progress
+    def calculateProgress(self, toUpdate, value):
+        currProgress = 0
+        total = 3
+        print('venue', self.venueBooked)
+        print('seating', self.seatingOrganised)
+        if toUpdate == 'venueBooked':
+            self.venueBooked = value
+        if toUpdate == 'seatingOrganised':
+            self.seatingOrganised = value
+        if toUpdate == 'menuOrganised':
+            self.menuOrganised = value
+        if toUpdate == 'optionalServicesOrganised':
+            self.optionalServicesOrganised = value
+
+        if self.venueBooked:
+            currProgress += 1
+        if self.seatingOrganised:
+            currProgress += 1
+        if self.menuOrganised:
+            currProgress += 1
+        if self.optionalServicesOrganised:
+            currProgress += 1
+        if self.optionalSelections:
+            total += 1
+
+        print('curr', currProgress)
+        self.eventProgress = (currProgress / total) * 100
+        return self.getDict()

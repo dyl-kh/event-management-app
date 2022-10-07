@@ -70,6 +70,5 @@ class Customer():
         customer = {'id': str(self.id), 'name': self.name, 'email': self.email,
                     'phone': self.phone, 'address': self.address}
         customers.append(customer)
-        print(customers)
         with open('./storage/customers.json', 'w') as f:
             json.dump(customers, f, indent=4)
