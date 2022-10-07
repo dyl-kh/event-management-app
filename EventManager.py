@@ -71,30 +71,34 @@ class EventManager(Staff):
                     print('No events found')
             for e in events:
                 if str(e['id']) == uIn:
-                    print('Package:', e['package'].name)
-                    print('Venue:', e['venue'].name)
-                    print('Date:', e['date'])
-                    print('Guests:', e['numGuests'])
-                    print('Menu:', e['menu'].name)
-                    print('Optional Services:', e['optionalServicesNames'])
-                    print(f'Total Price: ${e["totalPrice"]}')
+                    activeTwo = True
+                    while activeTwo:
+                        print()
+                        print('Package:', e['package'].name)
+                        print('Venue:', e['venue'].name)
+                        print('Date:', e['date'])
+                        print('Guests:', e['numGuests'])
+                        print('Menu:', e['menu'].name)
+                        print('Optional Services:', e['optionalServicesNames'])
+                        print(f'Total Price: ${e["totalPrice"]}')
+                        print()
 
-                    # manage event
-                    print('Please select an option from the menu below')
-                    print('1. Edit event')
-                    print('2. Delete event')
-                    print('0. Go Back')
-                    uIn = input('Please enter your selection: ')
-                    if uIn == '1':
-                        self.EditEvent(e)
-                        return
-                    elif uIn == '2':
-                        self.DeleteEvent(e)
-                        return
-                    elif uIn == '0':
-                        active = False
-                        break
+                        # manage event
+                        print('Please select an option from the menu below')
+                        print('1. Edit event')
+                        print('2. Delete event')
+                        print('0. Go Back')
+                        uIn = input('Please enter your selection: ')
+                        if uIn == '1':
+                            self.EditEvent(e)
+                        elif uIn == '2':
+                            if self.DeleteEvent(e):
+                                activeTwo = False
+                                break
 
+                        elif uIn == '0':
+                            active = False
+                            break
             else:
                 print('Event not found')
 
@@ -109,6 +113,7 @@ class EventManager(Staff):
         print('Please confirm you wish to delete this event')
         print('Enter 0 to return to the previous menu')
         print('To confirm type DELETE')
+        print()
         uIn = input('Please enter your selection: ')
         if uIn == '0':
             return
@@ -126,8 +131,10 @@ class EventManager(Staff):
             with open('./storage/events.pkl', 'wb') as f:
                 pickle.dump(events, f)
             print('Event deleted')
+            return True
         else:
             print('Event not deleted')
+            return False
 
     # update event progress
     def EventProgress(self):
