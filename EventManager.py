@@ -1,6 +1,9 @@
 from Staff import Staff
 import pickle
 import json
+from Band import Band
+from SoundSystem import SoundSystem
+from FlowerDecorations import FlowerDecorations
 
 
 class EventManager(Staff):
@@ -191,43 +194,55 @@ class EventManager(Staff):
                 with open('./storage/optionalServices.json', 'r') as f:
                     allSelections = json.load(f)
                 if 'optionalSelections' in event:
-                    currentSelections = event['optionalSelections']
                     currentNames = event['optionalServicesNames']
                 else:
-                    currentSelections = []
                     currentNames = []
                 print()
                 print('Toggle optional services')
                 done = False
                 while not done:
+                    print()
                     print('Please select an option from the menu below')
-                    for i, s in enumerate(allSelections):
+                    adds = []
+                    removes = []
+                    i = 1
+                    for s in allSelections:
                         if s['name'] in currentNames:
-                            print(f'{i+1}. {s["name"]} Remove')
+                            print(f'{i}. {s["name"]} - Remove')
+                            removes.append(s['name'])
                         else:
-                            print(f'{i+1}. {s["name"]} Add')
+                            print(f'{i}. {s["name"]} - Add')
+                            adds.append(s['name'])
+
+                        i += 1
                     print('0. Done')
                     print()
                     uIn = input('Please enter your selection: ')
                     if uIn == '0':
                         done = True
                         break
-                    elif int(uIn) in range(1, len(allSelections)+1):
-                        if allSelections[int(uIn)-1]['name'] in currentNames:
-                            currentSelections.remove(
-                                allSelections[int(uIn)-1])
+                    elif int(uIn) >= 1 and int(uIn) <= 3:
+                        if allSelections[int(uIn)-1]['name'] in removes:
                             currentNames.remove(
                                 allSelections[int(uIn)-1]['name'])
-                        else:
-                            currentSelections.append(
-                                allSelections[int(uIn)-1])
+                        elif allSelections[int(uIn)-1]['name'] in adds:
                             currentNames.append(
                                 allSelections[int(uIn)-1]['name'])
                     else:
-                        print('Invalid input')
+                        print('Invalid selection')
 
-                    newSelections = currentSelections
+                    currSelections = []
                     newNames = currentNames
+                    for name in newNames:
+                        if name == 'Band':
+                            currSelections.append(Band('Band'))
+                        elif name == 'Sound System':
+                            currSelections.append(SoundSystem('Sound System'))
+                        elif name == 'Flower Decorations':
+                            currSelections.append(
+                                FlowerDecorations('Flower Decorations'))
+
+                    newSelections = currSelections
                     event['calculateProgress'](
                         'optionalServicesOrganised', False)
                     print(

@@ -12,7 +12,8 @@
         "unavailableDates": [
             "2022-09-04",
             "2022-05-02",
-            "2022-05-05"
+            "2022-05-05",
+            "2022-08-08"
         ],
         "address": "1 Garden Street",
         "price": "100"
@@ -20,7 +21,9 @@
     {
         "name": "City Hall",
         "unavailableDates": [
-            "2022-07-03"
+            "2022-07-03",
+            "2022-09-04",
+            "2022-12-09"
         ],
         "address": "1 City Hall Street",
         "price": "300"

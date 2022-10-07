@@ -223,7 +223,7 @@ class Event():
 
                 else:
                     print('Invalid input')
-
+            print('selected', optionalSelections)
             return optionalSelections
 
     # calculate total price
@@ -233,7 +233,7 @@ class Event():
             total += int(event['venue'].price)
             total += int(event['menu'].pricePerHead) * int(event['numGuests'])
             if self.optionalSelections:
-                for o in event['optionalServices']:
+                for o in event['optionalSelections']:
                     total += int(o.price)
             return total
         else:
@@ -265,7 +265,7 @@ class Event():
             "numGuests": self.numGuests,
             "date": self.date,
             "menu": self.menu,
-            "optionalServices": self.optionalSelections,
+            "optionalSelections": self.optionalSelections,
             "totalPrice": self.totalPrice,
             "paid": True,
             "optionalServicesNames": self.optionalServicesNames,
